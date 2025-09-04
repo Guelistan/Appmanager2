@@ -318,3 +318,8 @@ git push -u origin main
 --- 
 
 dotnet publish -r win-x64 --self-contained -o "C:\Users\user\OneDrive\Desktop\OrdnerPush1"
+
+
+git remote add origin https://github.com/Guelistan/Appmanager2.git
+git branch -M main
+git push -u origin main

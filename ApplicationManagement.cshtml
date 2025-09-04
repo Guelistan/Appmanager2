@@ -1,0 +1,96 @@
+@page
+@model AppManager.Pages.Admin.ApplicationManagementModel
+@using AppManager.Models
+@{
+    ViewData["Title"] = "Anwendungsverwaltung";
+}
+
+<h1>Anwendungsverwaltung</h1>
+
+<!-- Erfolgsmeldung -->
+@if (TempData["SuccessMessage"] != null)
+{
+<div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+<!-- Fehlermeldung -->
+@if (TempData["ErrorMessage"] != null)
+{
+<div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<!-- Neue Anwendung hinzufügen (optional, vorbereitend) -->
+<form method="post">
+    <div class="form-group">
+        <label asp-for="NewApplication.Name">Neue Anwendung:</label>
+        <input asp-for="NewApplication.Name" class="form-control" />
+        <span asp-validation-for="NewApplication.Name" class="text-danger"></span>
+    </div>
+    <!-- Button könnte später mit Handler wie asp-page-handler="Add" ergänzt werden -->
+    <button type="submit" class="btn btn-primary" disabled>Hinzufügen (noch nicht implementiert)</button>
+</form>
+
+<hr />
+
+<!-- Liste der Anwendungen -->
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Letzter Start</th>
+            <th>Aktionen</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var app in Model.Applications)
+        {
+        <tr>
+            <td>@app.Name</td>
+            <td>
+                @if (app.IsStarted)
+                    {
+                <span class="text-success">Gestartet</span>
+                    }
+                    else
+                    {
+                <span class="text-danger">Gestoppt</span>
+                    }
+            </td>
+            <td>@app.LastLaunchTime.ToString("g")</td>
+            <td>
+                <form method="post" asp-page-handler="Start" style="display:inline">
+                    <input type="hidden" name="applicationId" value="@app.Id" />
+                    <button type="submit" class="btn btn-success btn-sm" title="Starten">
+                        ▶️ Start
+                    </button>
+                </form>
+
+                <form method="post" asp-page-handler="Stop" style="display:inline">
+                    <input type="hidden" name="applicationId" value="@app.Id" />
+                    <button type="submit" class="btn btn-warning btn-sm" title="Stoppen">
+                        ⏹️ Stop
+                    </button>
+                </form>
+
+                <form method="post" asp-page-handler="Restart" style="display:inline">
+                    <input type="hidden" name="applicationId" value="@app.Id" />
+                    <button type="submit" class="btn btn-secondary btn-sm" title="Neustarten">
+                        🔁 Restart
+                    </button>
+                </form>
+
+                @if (app.IsIISApplication && !string.IsNullOrWhiteSpace(app.IISAppPoolName))
+                    {
+                <form method="post" asp-page-handler="Recycle" style="display:inline">
+                    <input type="hidden" name="applicationId" value="@app.Id" />
+                    <button type="submit" class="btn btn-info btn-sm" title="AppPool recyceln">
+                        ♻️ Recycle
+                    </button>
+                </form>
+                    }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

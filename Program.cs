@@ -46,17 +46,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // 🔐 Identity-Konfiguration
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
-    {
-        options.SignIn.RequireConfirmedEmail = false;  // Username-Login ohne E-Mail-Bestätigung
-        options.User.RequireUniqueEmail = false;       // Username als primärer Login
+{
+    options.SignIn.RequireConfirmedEmail = false;  // Username-Login ohne E-Mail-Bestätigung
+    options.User.RequireUniqueEmail = false;       // Username als primärer Login
 
-        // 🔓 Gelockerte Passwort-Richtlinien für einfache Registrierung
-        options.Password.RequireDigit = false;
-        options.Password.RequiredLength = 3;
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequireUppercase = false;
-        options.Password.RequireLowercase = false;
-    })
+    // 🔓 Gelockerte Passwort-Richtlinien für einfache Registrierung
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 3;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+})
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
